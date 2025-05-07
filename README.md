@@ -1,2 +1,2 @@
 # TurgoLab
-Gradio app with FEM for cell inflation
+Streamlit app with FEM for cell inflation
