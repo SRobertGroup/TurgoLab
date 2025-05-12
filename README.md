@@ -2,8 +2,8 @@
 
 > _A Finite Element Modeling app to inflate 2D cell networks from .geo file_
 
-**Lead Development:**  
-Adrien Heymans
+**Lead Development:**   Adrien Heymans
+
 **Contributors:** 
 Ioannis Theodorou, Grégoire Loupit, Vinod Kumar, Gonzalo Revilla, Olivier Ali, Stéphanie Robert, Stéphane Verger
 
@@ -23,9 +23,7 @@ It provides:
   - Select the cell that will be fix (so the mesh don't fly away)
   - Download results
 
-### Run the app
-
-[**Run the app**](https://turgolab.serve.scilifelab.se/) 
+### [Run the app](https://turgolab.serve.scilifelab.se/) 
 
 ## 2. Installation
 
