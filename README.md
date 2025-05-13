@@ -68,7 +68,7 @@ Customize the stiffness of the cell wall (`Young`) or the Turgor pressure value 
 
 Export your results 
 
----
+
 
 > ⚠️ **Tips & Warnings**
 >
@@ -76,14 +76,14 @@ Export your results
 > - When using `.roi` input, consider increasing wall thickness to improve polygon closure
 > - Use higher smoothing values to improve mesh quality in large or irregular cells
 
----
+
 
 ## 4. Citation
 
 > Please cite [**Anatomeshr**](https://github.com/SRobertGroup/Anatomeshr) repository if you are using **Anatomeshr** or **TurgoLab** in your work.  
 > A manuscript describing the method is currently in preparation.
 
----
+
 
 ## Acknowledgments
 
