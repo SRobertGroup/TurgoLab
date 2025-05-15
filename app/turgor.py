@@ -1,10 +1,25 @@
+# -*- python -*-
+# -*- coding: utf-8 -*-
+#
+#      turgor simulation with bvpy
+#
+#      File contributor(s)
+#            Adrien Heymans <adrien.heymans@slu.se>
+#            Gonzalo Revilla <gonzalo.revilla-mut@inria.fr>
+# -----------------------------------------------------------------------
+
+# -----------------------------------------------------------------------
+
+import os
+os.environ["PYVISTA_OFF_SCREEN"] = "true"
+os.environ["DISPLAY"] = ""
+
 import pandas as pd
 import fenics as fe
-from bvpy.domains import CustomDomainGmsh
+from bvpy.domains import FixedGMSH
 from bvpy.vforms import HyperElasticForm
 from bvpy.vforms.elasticity import StVenantKirchoffPotential
 from bvpy import BVP
-from bvpy.domains.geometry import boundary_normal
 
 # ----- Read Parameters -----
 params = pd.read_csv("params.csv").iloc[0]
@@ -29,26 +44,20 @@ def xdmf_save(path, solution, vform):
     xdmf_file.write(stress, 1)
 
 
-mesh_path = './geometry.msh'
+
+mesh_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'geometry.msh')  # os.getcwd() may work otherwise
 
 # ----- FEM Setup -----
-cd = CustomDomainGmsh(fname=mesh_path)
+cd = FixedGMSH(fname=mesh_path, gdim=2)
 elastic_potential = StVenantKirchoffPotential(young=young, poisson=poisson)
-form = HyperElasticForm(potential_energy=elastic_potential, source=[0., 0., 0.], plane_stress=True)
+form = HyperElasticForm(potential_energy=elastic_potential, source=[0., 0.], plane_stress=True)
 turgor = BVP(domain=cd, vform=form)
 
 # ----- Dirichlet BC -----
-boundary2tag = {name: tag for tag, name in cd.sub_boundary_names.items()}
-tag = boundary2tag[bc_name]
-bc = fe.DirichletBC(turgor.functionSpace, [0, 0, 0], cd.bdata, tag)
-turgor.dirichletCondition.append(bc)
+turgor.add_zero_dirichlet_bc(boundary=bc_name)
 
 # ----- Neumann BC -----
-tag = boundary2tag["inner"]
-assert tag == 1, "Expected tag 1 for Neumann BC due to current BVPy limitations"
-nf = boundary_normal(turgor.functionSpace.mesh(), scale=-pressure)
-turgor.neumannCondition['variable'].append(nf)
-turgor._neumann_domain_id['variable'].append(tag)
+turgor.add_normal_neumann_bc(boundary="inner", norm=-pressure)
 
 # ----- Solver -----
 turgor.solve(
@@ -64,40 +73,41 @@ turgor.solve(
 # ----- Output -----
 xdmf_save("./turgor.xdmf", turgor.solution, form)
 
+# ----- Visualization -----
+
 import pyvista as pv
-from bvpy.utils.visu_pyvista import visualize
+from bvpy.utils.visu_pyvista import add_subplot
 
 # pv.start_xvfb()  # Start virtual framebuffer if needed
 
-# Apply the solution to the domain (deformed geometry)
-applied_turgor = cd.move(turgor.solution, return_cdata=False)
-
 # Define Plotter with subplots
-pl = pv.Plotter(shape=(2, 3), window_size=[1000, 800], off_screen=True)  # <- off_screen disables GUI
+off_screen = True  # If True, the GUI will not be displayed and the plot will be saved as a PNG
+pl = pv.Plotter(shape=(2, 3), window_size=[1000, 800], off_screen=off_screen)
 
 # -- Row 0 --
 pl.subplot(0, 0)
-visualize(turgor, visu_type='dirichlet', val_range=[-0.5, 0.5], plotter=pl, show_plot=False)
+add_subplot(pl, turgor.domain.mesh, title='Domain')
 
 pl.subplot(0, 1)
-visualize(turgor, visu_type='domain', plotter=pl, show_plot=False)
+add_subplot(pl, turgor.domain.fdata, mf_dict=turgor.domain.sub_facets_names, title="Boundaries")
 
 pl.subplot(0, 2)
-visualize(turgor, visu_type='young', cmap='Pastel2', plotter=pl, show_plot=False)
+add_subplot(pl, turgor.dirichletCondition, title="Dirichlet BC", show_norm=True)
 
-# -- Row 1 --
 pl.subplot(1, 0)
-visualize(turgor, visu_type='mesh', plotter=pl, show_plot=False)
-pl.add_title('Mesh \n(undeformed config.)', font_size=12)
+add_subplot(pl, turgor.neumannCondition, neumann_mf=turgor.neu_fdata, title='Neumann BC')
 
 pl.subplot(1, 1)
-visualize(turgor, visu_type='solution', title='Displacement field', plotter=pl, show_plot=False)
+add_subplot(pl, turgor.solution, title='Displacement field', mesh_kwargs={"show_edges": False})
 
 pl.subplot(1, 2)
-visualize(applied_turgor, plotter=pl, show_plot=False)
-pl.add_title('Mesh \n(deformed config.)', font_size=12)
+applied_turgor = cd.move(turgor.solution, return_cdata=False)  # Apply the solution to the domain (deformed geometry)
+add_subplot(pl, applied_turgor, title="Deformed domain", mesh_kwargs={"show_edges": False})
 
 # Finalize and save
 pl.link_views()
-pl.screenshot("plot.png")  # <- Save figure as PNG
-pl.close()
+if not off_screen:
+    pl.show()  # Show the plot in GUI
+else:
+    pl.screenshot("plot.png")  # <- Save figure as PNG
+    pl.close()
