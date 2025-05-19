@@ -41,13 +41,13 @@ cd TurgoLab
 To run with Docker (recommended):
 
 ```bash
-docker pull heymansadrien/turgolab:0.2.3
+docker pull heymansadrien/turgolab:0.3.2
 ```
 
 Then launch it:
 
 ```bash
-docker run -p 8501:8501 heymansadrien/turgolab:0.2.3
+docker run -p 8501:8501 heymansadrien/turgolab:0.3.2
 ```
 
 App will be available at: [http://localhost:8501](http://localhost:8501)
