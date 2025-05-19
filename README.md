@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/976231149.svg)](https://doi.org/10.5281/zenodo.15462275)
+
 # TurgoLab
 
 > _A Finite Element Modeling app to inflate 2D cell networks from .geo file_
