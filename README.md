@@ -39,13 +39,13 @@ cd TurgoLab
 To run with Docker (recommended):
 
 ```bash
-docker pull heymansadrien/turgolab:0.0.1
+docker pull heymansadrien/turgolab:0.2.3
 ```
 
 Then launch it:
 
 ```bash
-docker run -p 8501:8501 heymansadrien/turgolab:0.0.1
+docker run -p 8501:8501 heymansadrien/turgolab:0.2.3
 ```
 
 App will be available at: [http://localhost:8501](http://localhost:8501)
@@ -69,18 +69,9 @@ Customize the stiffness of the cell wall (`Young`) or the Turgor pressure value 
 Export your results 
 
 
-
-> ⚠️ **Tips & Warnings**
->
-> - Concave cells in `.xml` input can cause meshing errors
-> - When using `.roi` input, consider increasing wall thickness to improve polygon closure
-> - Use higher smoothing values to improve mesh quality in large or irregular cells
-
-
-
 ## 4. Citation
 
-> Please cite [**Anatomeshr**](https://github.com/SRobertGroup/Anatomeshr) repository if you are using **Anatomeshr** or **TurgoLab** in your work.  
+> Please cite [**BVPy**](https://gitlab.inria.fr/mosaic/bvpy) and [**Anatomeshr**](https://github.com/SRobertGroup/Anatomeshr) repository if you are using **Anatomeshr** or **TurgoLab** in your work.  
 > A manuscript describing the method is currently in preparation.
 
 
