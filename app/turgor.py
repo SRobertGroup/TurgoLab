@@ -82,7 +82,7 @@ from bvpy.utils.visu_pyvista import add_subplot
 
 # Define Plotter with subplots
 off_screen = True  # If True, the GUI will not be displayed and the plot will be saved as a PNG
-pl = pv.Plotter(shape=(2, 3), window_size=[1000, 800], off_screen=off_screen)
+pl = pv.Plotter(shape=(2, 3), window_size=[1000, 800], off_screen=off_screen, image_scale = 5)
 
 # -- Row 0 --
 pl.subplot(0, 0)
@@ -106,6 +106,7 @@ add_subplot(pl, applied_turgor, title="Deformed domain", mesh_kwargs={"show_edge
 
 # Finalize and save
 pl.link_views()
+pl.camera_position = 'xy'
 if not off_screen:
     pl.show()  # Show the plot in GUI
 else:

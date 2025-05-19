@@ -1,0 +1,11 @@
+[server]
+headless = true
+
+[theme]
+base = "light"
+
+[browser]
+gatherUsageStats = false
+
+[general]
+email = "your-email@domain.com"

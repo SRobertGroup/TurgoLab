@@ -1,4 +1,3 @@
-# Start from the slim Python 3.9 base image
 FROM python:3.9-slim
 
 # Create a user and set env vars
@@ -11,7 +10,7 @@ WORKDIR $HOME/app
 
 # Install system dependencies (for Mamba, Streamlit, etc.)
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    wget bzip2 \
+    wget bzip2 git\
     build-essential \
     libgl1-mesa-glx \
     mesa-utils \
@@ -33,6 +32,7 @@ ENV PATH="/opt/conda/bin:$PATH"
 # Copy environment definition and app files
 COPY env.yaml ./env.yaml
 COPY app/ $HOME/app/
+# COPY bvpy/ $HOME/bvpy
 RUN chown -R $USER:$USER $HOME/app
 
 # Create the environment from env.yaml
@@ -64,4 +64,6 @@ EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
 # Start Streamlit
-ENTRYPOINT ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0", "--browser.gatherUsageStats=false"]
+ENTRYPOINT ["streamlit", "run", "🏠_Home.py", "--server.port=8501", "--server.address=0.0.0.0", "--browser.gatherUsageStats=false"]
+
+# CMD ["conda", "run", "--no-capture-output", "-n", "bvpy_env", "streamlit", "run", "🏠_Home.py", "--server.port=8501", "--server.address=0.0.0.0"]
