@@ -1,4 +1,5 @@
-[![DOI](https://zenodo.org/badge/976231149.svg)](https://doi.org/10.5281/zenodo.15462275)
+[![DOI](https://zenodo.org/badge/976231149.svg)](https://doi.org/10.5281/zenodo.15462275)  [![Launch App](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=plastic&logo=streamlit&logoColor=white)](https://turgolab.serve.scilifelab.se/)
+
 
 # TurgoLab
 
